@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './model/rootReducer';
+import { setScreenSize } from './model/globalUserInterfaceSlice';
 
 const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+	const { isModalVisible } = useSelector(
+		(state: RootState) => state.globalUserInterface
+	);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(setScreenSize(window.innerWidth));
+	});
+	const updateSize = () => {
+		dispatch(setScreenSize(window.innerWidth));
+	};
+
+	window.addEventListener('resize', updateSize);
+	return (
+		<div>
+			<div>Test</div>
+			{isModalVisible ? <h1>MODAL</h1> : null}
+		</div>
+	);
+};
 
 export default App;

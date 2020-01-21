@@ -1,44 +1,44 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is deployed at [Grady Knight](http://gradyknight.com).
 
-## Available Scripts
+## Purpose of the Site 
 
-In the project directory, you can run:
+Obviously, this is a portfolio site. It is also a place for me to experiment with some architecture patterns that are potentially inappropriate for client work at my day job. 
 
-### `yarn start`
+The three pieces I wanted to explore are:
+ - Holding all state in a single data model
+ - Using Redux Toolkit to implement redux
+ - Having no style sheets
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### `Holding all state in a single model`
 
-### `yarn test`
+Outside of my daily work, I'm interested in Elm and Reason. This site is built to mimic the model -> view -> event -> new model cycle from Elm.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Redux is the obvious model to use in React land. To that end, I've implemented all components as functional components. No component holds any form of state. Instead, each component is simply a static render method or a functional component which reads and dispatches to the relevant slice of redux state.
 
-### `yarn build`
+### `Using Redux ToolKit`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+[Redux Tool Kit](https://redux-toolkit.js.org) (RTK) was recently released. I wanted to play with it as a test bed before recommending its use at my day job. Specifically, I wanted to evaluate its promises of a) reducing the boilerplate associated with redux, b) organizing state in a logical manner, and c) simplifying the use of TypeScript with redux.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Without going into great detail, RTK absolutely delivers in a) and c). There's still the potential for foot-gunning in b) but it is greatly minified. 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### `No Style Sheets`
 
-### `yarn eject`
+I alternate between React and React-Native projects. I find it inconvenient to swap between style sheets (general React projects) and style objects (React-Native). To that end, I wanted to build a React app using only inline styles. I alternated between Material-UI's useStyles hook and simply spreading over a JS object. 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+There are drawbacks vs CSS. Theoretically there is a performance hit. I'll save that debate for in-person discussions (this will go better with a beer). The only part of CSS I genuinely missed was media querries. However, with RTK, I added a window resize listener on the parent component and store a boolean in Redux for big/little screen. It would be trivial to change this to a switch with enumerated breakpoints.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The benefit of not using CSS is a much easier transition to React Native. I could see a pattern similar to 'adaptive widgets' in flutter where the parent component inspects the environment and renders either a div or a container.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Technologies Used
 
-## Learn More
+I tried to keep the number of techs to a minimum:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- React
+- Redux (Redux Toolkit)
+- Material UI
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Performance
+
+This is a big bundle size. I did that because I wanted to simplify my deployment. To that end, I include svgs, pngs, and jpegs in the final bundle. This lets me simply `yarn build` and deploy and host through an Amazon Web Service (AWS) S3 bucket. For a significant app I'd not follow this pattern. For a simple portfolio site, I didn't see this as worth the effort to segment and manage.
